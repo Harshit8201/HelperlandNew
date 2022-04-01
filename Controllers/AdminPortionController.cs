@@ -574,10 +574,6 @@ namespace Helperland.Controllers
 
         }
 
-        public IActionResult abc()
-        {
-            return View();
-        }
-
+       
     }
 }
