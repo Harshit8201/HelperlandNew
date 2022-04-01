@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2OBNmEWgFR6YCfBHiLOQaN0+JSpmSmoVjsq6opxSeEjto8WIUZgFoa/TAalRoAV25EHk1QBnOIFvs9ijoqeoiA==",
+  "dgSpecHash": "vykqIuWipFnS3V95uQCOkJJKYCXFLbw+62uqy3g3dMnU8tgKpkINrwmrPADxmh5+TN6AHBeKr/auc/QTUEMEMg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\LENOVO 520\\source\\repos\\Helperland\\Helperland.csproj",
+  "projectFilePath": "E:\\HelperlandNew\\Helperland.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\LENOVO 520\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\LENOVO 520\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\3.1.22\\microsoft.aspnetcore.mvc.razor.extensions.3.1.22.nupkg.sha512",

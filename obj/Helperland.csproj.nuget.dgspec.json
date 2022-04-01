@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\LENOVO 520\\source\\repos\\Helperland\\Helperland.csproj": {}
+    "E:\\HelperlandNew\\Helperland.csproj": {}
   },
   "projects": {
-    "C:\\Users\\LENOVO 520\\source\\repos\\Helperland\\Helperland.csproj": {
+    "E:\\HelperlandNew\\Helperland.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\LENOVO 520\\source\\repos\\Helperland\\Helperland.csproj",
+        "projectUniqueName": "E:\\HelperlandNew\\Helperland.csproj",
         "projectName": "Helperland",
-        "projectPath": "C:\\Users\\LENOVO 520\\source\\repos\\Helperland\\Helperland.csproj",
+        "projectPath": "E:\\HelperlandNew\\Helperland.csproj",
         "packagesPath": "C:\\Users\\LENOVO 520\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\LENOVO 520\\source\\repos\\Helperland\\obj\\",
+        "outputPath": "E:\\HelperlandNew\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\LENOVO 520\\AppData\\Roaming\\NuGet\\NuGet.Config",
