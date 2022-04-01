@@ -1,0 +1,186 @@
+﻿
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard- Helperland</title>
+
+
+    <!-- #region Links -->
+    <link rel="icon" href="~/Images/favicon_img.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel=stylesheet>
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="~/jquery-validate/jquery.validate.js"></script>
+    <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+
+
+
+
+    <!-- #endregion Links -->
+</head>
+<body>
+    <!--#region Navbar-->
+    <header class="fixed-top">
+        <div class="custom-navbar-logo ">
+            <img src="~/Images/white-logo-transparent-background.png" alt="" class="mb-4">
+        </div>
+        <nav class="custom-mobile-navbar fixed-top" id="nav-menu">
+            <ul class="nav__list" style="line-height : 1.2vh">
+                <i class="bi bi-x-lg header__close" id="close-menu"></i>
+                <li class="nav__items ">
+                    <a class="nav__link border-btn custom-bg-green-btn"
+                       asp-controller="BookMyService" asp-action="Index" id="btnBookNow" asp-route-isLogged="@ViewBag.IsLogged">Book now</a>
+                </li>
+
+
+
+                <li class="d-none" id="userID" value="@Context.Session.GetInt32(" userID")"></li>
+                <li class="d-none" id="userEmail" value="@Context.Session.GetString(" userEmail")"></li>
+                <li class="nav__items border-btn">
+                    <a asp-controller="Home" asp-action="Prices" asp-route-isLogged="@ViewBag.IsLogged" class="nav__link ">Prices & Services</a>
+                </li>
+                <li class="nav__items">
+                    <a asp-controller="Home" asp-action="FAQ" class="nav__link">Warranty</a>
+                </li>
+                <li class="nav__items">
+                    <a asp-controller="Home" asp-action="Contact" class="nav__link">Contact</a>
+                </li>
+
+                <li class="custom-vertical-bar ms-2">|</li>
+                <li class="nav__items">
+                    <a href="" class="nav__link p-0">
+                        <img src="~/Images/icon-notification.png" alt="" class="custom-notification-size">
+                    </a>
+                </li>
+                <li class="custom-vertical-bar me-1">|</li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarUserLoggedInDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="~/Images/admin-user.png" alt="" class="custom-notification-size">
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarUserLoggedInDropDown">
+                        <li><a class="dropdown-item" href="#">Welcome @Context.Session.GetString("FirstName")</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-controller="Customer" asp-action="Index">My Dashboard</a></li>
+                        <li><a class="dropdown-item" href="#">My Setting</a></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout">Logout</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="custom-line-mobile-view"></li>
+                <li class="nav__items">
+                    <a href="" class="nav__link custom-navbar-icon-show-hide">
+                        <img src="./assets/img/fb.png"
+                             alt="">
+                    </a>
+                    <a href="" class="nav__link custom-navbar-icon-show-hide"><img src="~/Images/insta.png" alt=""></a>
+                </li>
+            </ul>
+        </nav>
+        <i class="bi bi-list header__toggle" id="toggle-menu"></i>
+    </header>
+    <!--#endregion Navbar-->
+    <!--#region Upcoming Service Welcome part & Dashboard-->
+    <div class="custom-service-provider-upcoming-service-start p-0">
+        <div class="container-fluid custom-background-bg-dim-sand">
+            <div class="row text-center">
+                <div class="custom-upcoming-service-header">Welcome, <b>@HttpContextAccessor.HttpContext.Session.GetString("FirstName")!</b></div>
+            </div>
+        </div>
+
+        <div class="container-fluid mt-5">
+
+            @RenderBody()
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <!--#endregion Upcoming Service Welcome part & Dashboard-->
+    <!--#region Footer-->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-2 footer-widget">
+                        <a href="#" title="Helper Hand">
+                            <img src="~/Images/white-logo-transparent-background-copy-4.png" alt="Helper Hand" class="a">
+                        </a>
+                    </div>
+                    <div class="col-lg-8 footer-widget">
+                        <ul class="footer-navigation d-flex justify-content-center">
+                            <li>
+                                <a asp-action="index" asp-controller="home">Home</a>
+                            </li>
+                            <li>
+                                <a asp-action="About" asp-controller="home">About</a>
+                            </li>
+                            <li>
+                                <a href="#" title="Testimonials">Testimonials</a>
+                            </li>
+                            <li>
+                                <a asp-action="Faq" asp-controller="home">FAQs</a>
+                            </li>
+                            <li>
+                                <a href="#" title="Insurance Policy">Insurance Policy</a>
+                            </li>
+                            <li>
+                                <a href="#" title="Impressum">Impressum</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 footer-widget">
+                        <ul class="social-media-list d-flex justify-content-end">
+                            <li>
+                                <a href="#" target="_blank" title="Facebook">
+                                    <img src="~/Images/fb.png" alt="Facebook">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank" title="Instagram">
+                                    <img src="~/Images/inst.png" alt="Instagram">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <hr class="text-light">
+                    <div class="custom-footer-text text-center ">
+                        ©2018 Helperland. All rights reserved. Terms and Conditions | Privacy Policy
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--#endregion Footer-->
+    <!--#region Javascript-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="~/jquery-validate/jquery.validate.js"></script>
+    <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+</body>
+</html>

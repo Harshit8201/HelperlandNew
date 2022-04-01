@@ -1,0 +1,483 @@
+﻿@{
+    Layout = "_MySettingsLayout";
+    ViewBag.Title = "Dashbord ";
+}
+@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@model Helperland.Models.ViewModel.SPDetailsViewModel;
+    <link href="~/css/servicehistory.css" rel="stylesheet" />
+
+<input value="2" type="hidden" id="userId" />
+<div class="container-fluid">
+    
+    <div class="row justify-content-center mt-2">
+        <div class="col-md-3">
+            <partial name="_partialLeftSideNavForSp" />
+        </div>
+        <div class="col-md-9">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link flex-sm-fill  text-marun-bold " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#Details" type="button" role="tab" aria-controls="nav-home" aria-selected="true">My Details</button>
+                    <button class="nav-link flex-sm-fill text-marun-bold" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#ChangePassword" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Change Password</button>
+                </div>
+            </nav>
+            <div class="tab-content mt-3" id="nav-tabContent">
+                <div class="tab-pane fade show active active-nav p-2" id="Details" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <form method="post" asp-controller="ServiceProvider" asp-action="GetUserData"  >
+
+                        <div class="row">
+                            <div class=" col-md-12">
+                                <span class="font-bold">Account Status: </span>  @if (Model.IsActive)
+                                {
+                                    <span id="accountStatus" class="text-success"> Active</span>
+                                }
+                                else
+                                {
+                                    <span id="accountStatus" class="text-danger"> Inactive</span>
+                                }
+                            </div>
+                            <div class="alert alert-success alert-dismissible fade show display-none" id="alertUserData" role="alert">
+                                Data update successfully.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+
+                            <div class="col-md-4">
+
+                                <span class="font-bold"> Firstname</span>
+                                <input type="text" placeholder="Firstname" id="txtFirstName" asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="font-bold"> Lastname</span>
+                                <input type="text" class="form-control" asp-for="lastName" placeholder="Lastname" />
+                                <span asp-validation-for="lastName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="font-bold"> E-mail address</span>
+                                <input type="text" class="form-control" disabled id="txtEmail" asp-for="email" />
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <span class="font-bold"> Mobile number</span>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">+49</div>
+                                    </div>
+                                    <input type="text" class="form-control" id="txtMobileNumber" asp-for="mobileNumber" placeholder="Mobile number">
+
+                                </div>
+                                <span asp-validation-for="mobileNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-5">
+                                <span class="font-bold"> Date of birth</span>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select class="form-select form-control ddCheck" asp-for="day" id="ddDay">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <select class="form-select form-control ddCheck" id="ddMonth" asp-for="month">
+                                            <option value="1">January</option>
+                                            <option value="2">February</option>
+                                            <option value="3">March</option>
+                                            <option value="4">April</option>
+                                            <option value="5">May</option>
+                                            <option value="6">June</option>
+                                            <option value="7">July</option>
+                                            <option value="8">August</option>
+                                            <option value="9">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select form-control ddCheck" id="ddYear" asp-for="year">
+                                            <option value="2030">2030</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2027">2027</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2014">2014</option>
+                                            <option value="2013">2013</option>
+                                            <option value="2012">2012</option>
+                                            <option value="2011">2011</option>
+                                            <option value="2010">2010</option>
+                                            <option value="2009">2009</option>
+                                            <option value="2008">2008</option>
+                                            <option value="2007">2007</option>
+                                            <option value="2006">2006</option>
+                                            <option value="2005">2005</option>
+                                            <option value="2004">2004</option>
+                                            <option value="2003">2003</option>
+                                            <option value="2002">2002</option>
+                                            <option value="2001">2001</option>
+                                            <option value="2000">2000</option>
+                                            <option value="1999">1999</option>
+                                            <option value="1998">1998</option>
+                                            <option value="1997">1997</option>
+                                            <option value="1996">1996</option>
+                                            <option value="1995">1995</option>
+                                            <option value="1994">1994</option>
+                                            <option value="1993">1993</option>
+                                            <option value="1992">1992</option>
+                                            <option value="1991">1991</option>
+                                            <option value="1990">1990</option>
+                                            <option value="1989">1989</option>
+                                            <option value="1988">1988</option>
+                                            <option value="1987">1987</option>
+                                            <option value="1986">1986</option>
+                                            <option value="1985">1985</option>
+                                            <option value="1984">1984</option>
+                                            <option value="1983">1983</option>
+                                            <option value="1982">1982</option>
+                                            <option value="1981">1981</option>
+                                            <option value="1980">1980</option>
+                                            <option value="1979">1979</option>
+                                            <option value="1978">1978</option>
+                                            <option value="1977">1977</option>
+                                            <option value="1976">1976</option>
+                                            <option value="1975">1975</option>
+                                            <option value="1974">1974</option>
+                                            <option value="1973">1973</option>
+                                            <option value="1972">1972</option>
+                                            <option value="1971">1971</option>
+                                            <option value="1970">1970</option>
+                                            <option value="1969">1969</option>
+                                            <option value="1968">1968</option>
+                                            <option value="1967">1967</option>
+                                            <option value="1966">1966</option>
+                                            <option value="1965">1965</option>
+                                            <option value="1964">1964</option>
+                                            <option value="1963">1963</option>
+                                            <option value="1962">1962</option>
+                                            <option value="1961">1961</option>
+                                            <option value="1960">1960</option>
+                                            
+                                        </select>
+                                    </div>
+                                    <span asp-validation-for="month" class="text-danger"></span>
+                                    <span asp-validation-for="day" class="text-danger"></span>
+                                    <span asp-validation-for="year" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <span class="font-bold">Nationality</span>
+                                <select class="form-control form-select" asp-for="NationalityId">
+                                    <option value="1"> Indian </option>
+                                    <option value="2"> German </option>
+                                    <option value="3"> United States </option>
+                                </select>
+                                <span asp-validation-for="NationalityId" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="font-bold">Gender</span><br />
+                                <input  type="radio" name="Gender" value="1" asp-for="Gender" /> <span class="simple-font">Male</span>  &nbsp;
+                                <input type="radio" name="Gender" value="2" asp-for="Gender" /> <span class="simple-font">Female</span> &nbsp;
+                                <input type="radio" name="Gender" value="3" asp-for="Gender" /> <span class="simple-font">Not to say</span><br />
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row ">
+                            <div class="col-md-12">
+                                <span class="font-bold"> Select Avatar</span><br />
+                                <div class="Avatar-contentDiv">
+                                    <input type="hidden" asp-for="UserProfilePicture" id="userProfilePic" />
+                                    <div class="Avatar-img">
+                                        <button type="button" class="btn-style-none" onclick="ChangeBorder(0)">  <img src="~/Images/cap.png" class="height-85" /></button>
+
+                                    </div>
+                                    <div class="Avatar-img">
+                                        <button type="button" class="btn-style-none " onclick="ChangeBorder(1)"> <img src="~/Images/avatar-female.png" class="height-85 img-fluid" /></button>
+
+                                    </div>
+                                    <div class="Avatar-img">
+                                        <button type="button" class="btn-style-none" onclick="ChangeBorder(2)"> <img src="~/Images/avatar-hat.png" class="height-85" /></button>
+
+                                    </div>
+                                    <div class="Avatar-img">
+
+                                        <button type="button" class="btn-style-none " onclick="ChangeBorder(3)"> <img src="~/Images/avatar-iron.png" class="height-85" /></button>
+                                    </div>
+                                    <div class="Avatar-img">
+                                        <button type="button" class="btn-style-none " onclick="ChangeBorder(4)"> <img src="~/Images/avatar-male.png" class="height-85" /></button>
+
+                                    </div>
+                                    <div class="Avatar-img">
+                                        <button type="button" class="btn-style-none " onclick="ChangeBorder(5)">  <img src="~/Images/avatar-ship.png" class="height-85" /></button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <h5 class="font-bold"> My Address</h5>
+                            <hr />
+                            <div class="col-md-4">
+
+                                <span class="font-bold"> Street Name</span>
+                                <input type="text" placeholder="Street Name" id="txtStreetname" class="form-control" asp-for="AddressLine1" />
+                                <span asp-validation-for="AddressLine1" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="font-bold"> House Number</span>
+                                <input type="text" class="form-control" id="txthouseNo" placeholder="House Number" asp-for="AddressLine2" />
+                                <span asp-validation-for="AddressLine2" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="font-bold">Postal Code</span>
+                                <input type="text" class="form-control" id="txtPostolcode" placeholder="Postal Code" asp-for="Zipcode" />
+                                <span asp-validation-for="Zipcode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+
+                                <span class="font-bold"> City </span>
+                                <input type="text" class="form-control" id="txthouseNo" placeholder="House Number" asp-for="City" />
+
+                            </div>
+
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-2">
+                                <input type="submit" value="Save" class=" btn rounded-pill rounded marun font-white " />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="tab-pane   fade " id="ChangePassword" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    <div class="alert display-none" role="alert" id="alertChangePassword">
+
+                    </div>
+                    <div class="row m-2">
+                        <div class="col-md-4">
+                            <span class="font-bold"> Old Password</span>
+                            <input type="password" class="form-control" placeholder="Current Password" id="txtCurrentPassword" />
+                            <span class="text-danger display-none error" id="errtxtCurrentPassword"></span>
+                        </div>
+                    </div>
+                    <div class="row m-2">
+                        <div class="col-md-4">
+                            <span class="font-bold"> New Password</span>
+                            <input type="password" class="form-control" placeholder="Password" id="txtNewPassword" />
+                            <span class="text-danger display-none error" id="errtxtNewPassword">  </span>
+                        </div>
+                    </div>
+                    <div class="row m-2">
+                        <div class="col-md-4">
+                            <span class="font-bold"> Confirm Password</span>
+                            <input type="password" class="form-control" placeholder="Confirm Password" id="txtConfirmPassword" />
+                            <span class="text-danger  error" id="errtxtConfirmPassword"> </span><br />
+                            <input type="button" value="Save" class="btn rounded-pill marun font-white"  id="btnSavePassword" />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        $(document).ready(function () {
+            $(".Avatar-img img")[$("#userProfilePic").val()].className += " Selected-Avatar";
+            $('#nav-tab button').on('click', function (e) {
+                $(this).tab('show');
+                $(".nav-tabs button").removeClass("border-bottom-blue text-marun-bold");
+                $(this).addClass(" border-bottom-blue text-marun-bold");
+                $(".tab-content .tab-pane").addClass("active-nav");
+            })
+            /*Change Password Validation*/
+            $('#txtCurrentPassword').on('input', function () {
+                    var Password = $("#txtCurrentPassword").val();
+                    var uppercasePassword = /(?=.*?[A-Z])/;
+                    var lowercasePassword = /(?=.*?[a-z])/;
+                    var digitPassword = /(?=.*?[0-9])/;
+                    var spacesPassword = /^$|\s+/;
+                    var symbolPassword = /(?=.?[#?!@@$%^&-])/;
+                var minEightPassword = /.{8,}/;
+                if (Password.length == 0) {
+                    $('#errtxtCurrentPassword').addClass('error').text('Password is required').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else if (Password.trim().length == 0) {
+                    $('#errtxtCurrentPassword').addClass('error').text("Password is required without space").show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else if (!uppercasePassword.test(Password)) {
+                    $('#errtxtCurrentPassword').addClass('error').text('At least one Uppercase').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else if (!lowercasePassword.test(Password)) {
+                    $('#errtxtCurrentPassword').addClass('error').text('At least one Lowercase').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else if (!digitPassword.test(Password)) {
+                    $('#errtxtCurrentPassword').addClass('error').text('At least one digit').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else if (!symbolPassword.test(Password)) {
+                    $('#errtxtCurrentPassword').addClass('error').text('At least one special character').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else if (spacesPassword.test(Password)) {
+                    $('#errtxtCurrentPassword').addClass('error').text('Whitespaces are not allowed').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else if (!minEightPassword.test(Password)) {
+                    $('#errtxtCurrentPassword').addClass('error').text('Minimum 8 length password').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else
+                {
+                    $("#btnSavePassword").removeAttr('disabled');
+                    $('#errtxtCurrentPassword').removeClass('error').hide();
+                }
+            });
+            $('#txtNewPassword').on('input', function () {
+                var Password = $("#txtNewPassword").val();
+                var uppercasePassword = /(?=.*?[A-Z])/;
+                var lowercasePassword = /(?=.*?[a-z])/;
+                var digitPassword = /(?=.*?[0-9])/;
+                var spacesPassword = /^$|\s+/;
+                var symbolPassword = /(?=.?[#?!@@$%^&-])/;
+                var minEightPassword = /.{8,}/;
+                if (Password.length == 0) {
+                    $('#errtxtNewPassword').addClass('error').text('Password is required').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                } else if (Password.trim().length == 0) {
+                    $('#errtxtNewPassword').addClass('error').text("Password is required without space").show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                } else if (!uppercasePassword.test(Password)) {
+                    $('#errtxtNewPassword').addClass('error').text('At least one Uppercase').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                } else if (!lowercasePassword.test(Password)) {
+                    $('#errtxtNewPassword').addClass('error').text('At least one Lowercase').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                } else if (!digitPassword.test(Password)) {
+                    $('#errtxtNewPassword').addClass('error').text('At least one digit').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                } else if (!symbolPassword.test(Password)) {
+                    $('#errtxtNewPassword').addClass('error').text('At least one special character').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                } else if (spacesPassword.test(Password)) {
+                    $('#errtxtNewPassword').addClass('error').text('Whitespaces are not allowed').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                } else if (!minEightPassword.test(Password)) {
+                    $('#errtxtNewPassword').addClass('error').text('Minimum 8 length password').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else {
+                    $("#btnSavePassword").removeAttr('disabled');
+                    $('#errtxtNewPassword').removeClass('error').hide();
+                }
+            });
+            $('#txtConfirmPassword').on('input', function () {
+                var Password = $("#txtConfirmPassword").val();
+                if (Password != $("#txtNewPassword").val()) {
+                    $('#errtxtConfirmPassword').addClass('error').text('Confirm does  not match with your new password').show();
+                    $("#btnSavePassword").attr('disabled', 'disabled');
+                }
+                else {
+                    $("#btnSavePassword").removeAttr('disabled');
+                    $('#errtxtConfirmPassword').removeClass('error').hide();
+                }
+            });
+            /*End Change Password Validation*/
+            $("#btnSavePassword").on("click", function () {
+                if ($('#ChangePassword').find('.error').length > 0) {
+                    $('#btnSavePassword').attr('disabled','disabled');
+                    return;
+                } else {
+                     $.ajax({
+                          type: "POST",
+                         url: "@Url.Action("ResetPassword","ServiceProvider")",
+                         data: { "oldPassword": $("#txtCurrentPassword").val(), "newPassword": $("#txtNewPassword").val() },
+                         success: function (responce) {
+                             if (responce) {
+                                 $("#alertChangePassword").removeClass("alert-danger").addClass("alert-success").text("Change Password Successfully.").show().fadeOut(5000);
+                                 $("#txtCurrentPassword").val("");
+                                 $("#txtNewPassword").val("");
+                                 $("#txtConfirmPassword").val("");
+                             }
+                             else {
+                                 $("#alertChangePassword").removeClass("alert-success").addClass("alert-danger").text("Old password does't match .").show().fadeOut(8000);
+                                 $("#txtCurrentPassword").val("");
+                                 $("#txtNewPassword").val("");
+                                 $("#txtConfirmPassword").val("");
+                             }
+                            },
+                            failure: function (response) {
+                                alert("failure");
+                            },
+                            error: function (response) {
+                                alert("Something went Worng");
+                            }
+                      });
+                }
+            });
+       });
+        /*Chenge Border of selected Avatar*/
+        function ChangeBorder(para) {
+            let avatar = $(".Avatar-img img");
+            avatar.removeClass("Selected-Avatar");
+            avatar[para].className += " Selected-Avatar";
+            $("#userProfilePic").val(para);
+        }
+    </script>
+

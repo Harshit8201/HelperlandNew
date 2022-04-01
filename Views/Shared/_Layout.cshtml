@@ -1,0 +1,366 @@
+﻿@using Microsoft.AspNetCore.Http;
+@model Helperland.Models.User;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+
+@{ int? userID = Context.Session.GetInt32("userID");
+    string userEmail = Context.Session.GetString("userEmail");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Helperland</title>
+
+
+    <!-- #region Links -->
+    <link rel="icon" href="~/Images/favicon_img.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel=stylesheet>
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <!-- #endregion Links -->
+    <style>
+        #thispw {
+            background-color: #1D7A8C !important;
+            color: #FFF;
+            width: 90%;
+            margin: auto;
+        }
+
+        #fg {
+            margin: 0px !important;
+        }
+
+
+        #not {
+            margin-left: 2.5rem;
+            margin-right: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        #notnew {
+            margin-left: 3rem;
+        }
+
+        #new {
+            margin-left: 0.75rem;
+        }
+
+        #rememberme {
+            font-size: 2rem;
+        }
+
+        .parallax {
+            background-image: url("~/Images/group-35.png");
+            min-height: 500px;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        #sum {
+            position: absolute;
+            left: 60px;
+            top: 28%;
+            color: #fff;
+            z-index: 2;
+            max-width: 400px;
+        }
+
+        #thispwd {
+            background: rgba(0,95,113,.6) !important;
+            margin-bottom: 14% !important;
+            padding: 17px !important;
+            font-size: 16px !important;
+            color: #FFF !important;
+            width: 14% !important;
+            border: solid 1px white !important;
+            border-radius: 40px !important;
+            box-shadow: none !important;
+            outline: 0 !important;
+        }
+
+            #thispwd:hover {
+                cursor: pointer;
+                font-size: 16px;
+                color: rgba(0,95,113,.6);
+                border: solid 1px #646464 !important;
+            }
+
+        #not {
+            margin-left: 2.5rem;
+            margin-right: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        #notnew {
+            margin-left: 3rem;
+        }
+
+        #new {
+            margin-left: 0.75rem;
+        }
+
+        #thispwd2 {
+            background: #1d7a8c !important;
+            display: block;
+            justify-content: center;
+            margin-left: 6px !important;
+            margin-right: 6px !important;
+            padding: 17px 240px !important;
+            font-size: 16px !important;
+            color: #FFF !important;
+            width: 14% !important;
+            border: solid 1px white !important;
+            border-radius: 40px !important;
+            box-shadow: none !important;
+            outline: 0 !important;
+        }
+    </style>
+
+</head>
+<body>
+
+    <!--#region Navbar-->
+    <header class="fixed-top">
+        @*<div class="custom-navbar-logo">
+            <img src="~/Images/white-logo-transparent-background.png" alt="" class="mb-4">
+        </div>*@
+        <nav class="custom-mobile-navbar fixed-top" id="nav-menu">
+            <a class="navbar-brand" asp-action="Index" asp-controller="home">
+                <img src="~/Images/white-logo-transparent-background.png"
+                     class="img-fluid custom-logo" alt="">
+            </a>
+            <ul class="nav__list" style="line-height : 1.2vh">
+                <i class="bi bi-x-lg header__close" id="close-menu"></i>
+                @{ var user = HttpContextAccessor.HttpContext.Session.GetInt32("User_Session");
+                    if (user != null)
+                    {
+                    <li class="nav__items ">
+                       <a class="nav__link border-btn custom-bg-green-btn"
+                       asp-controller="BookService" asp-action="BookService" id="btnBookNow" asp-route-isLogged="@ViewBag.IsLogged">Book now</a>
+                   </li>
+                    }
+                    else
+                    {
+                   <li class="nav__items ">
+                       <a class="nav__link border-btn custom-bg-green-btn" data-bs-toggle="modal" data-bs-target="#myModal">
+                           Book Now
+                       </a>
+                  </li>
+                        }
+                    }
+                <li class="d-none" id="userID" value="@Context.Session.GetInt32("userID")"></li>
+                <li class="d-none" id="userEmail" value="@Context.Session.GetString("userEmail")"></li>
+                <li class="nav__items border-btn">
+                    <a asp-controller="Home" asp-action="Prices" asp-route-isLogged="@ViewBag.IsLogged" class="nav__link ">Prices & Services</a>
+                </li>
+                <li class="nav__items">
+                    <a asp-controller="Home" asp-action="FAQ" class="nav__link ">Warranty</a>
+                </li>
+                <li class="nav__items">
+                    <a asp-controller="Home" asp-action="ContactUs" class="nav__link">Contact</a>
+                </li>
+                @if (user != null)
+                {
+                    <li class="custom-vertical-bar ms-2">|</li>
+                    <li class="nav__items">
+                        <a href="" class="nav__link p-0">
+                            <img src="~/Images/icon-notification.png" alt="" class="custom-notification-size">
+                        </a>
+                    </li>
+                    <li class="custom-vertical-bar me-1">|</li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarUserLoggedInDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="~/Images/admin-user.png" alt="" class="">
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarUserLoggedInDropDown">
+                            <li><a class="dropdown-item" href="#">Welcome @Context.Session.GetString("FirstName")</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">My Dashboard</a></li>
+                            <li><a class="dropdown-item" href="#">My Setting</a></li>
+                            <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav__items border-btn">
+                        <a class="btn text-white" data-bs-toggle="modal" data-bs-target="#myModal" data-keyboard="false" data-dismiss="modal">
+                            Login
+                        </a>
+                    </li>
+                    <li class="nav__items border-btn"><a asp-controller="Home" asp-action="ServiceProviderBecomeAPro" class="nav__link" id="btnBecomeHelper">Become a Helper</a></li>
+                }
+
+                <li class="custom-line-mobile-view"></li>
+                <li class="nav__items">
+                    <a href="" class="nav__link custom-navbar-icon-show-hide">
+                        <img src="./assets/img/fb.png"
+                             alt="">
+                    </a>
+                    <a href="" class="nav__link custom-navbar-icon-show-hide"><img src="~/Images/inst.png" alt=""></a>
+                </li>
+            </ul>
+        </nav>
+        <i class="bi bi-list header__toggle" id="toggle-menu"></i>
+    </header>
+    <!--#endregion Navbar-->
+
+
+    @*<div class="container-fluid p-0">*@
+<main role="main" class="">
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <!-- Modal content-->
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLongTitle">
+                        Login to your account
+                    </h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body loginPopup p-2">
+                    <form method="post" asp-controller="Account" asp-action="Login">
+                        <h3>@TempData["ErrorforLogin"]</h3>
+                        <div id="not" class="mb-5">
+                            <input type="email" placeholder="Email" asp-for="Email" class="form-control form-control-lg"
+                                   id="inputEmail" />
+                        </div>
+                        <div id="not" class="mb-5">
+                            <input type="password" asp-for="Password" placeholder="password" class="form-control form-control-lg"
+                                   id="inputEmail" />
+                        </div>
+                        <div class="form-group d-flex" id="notnew">
+                            <input type="checkbox" value="rememberme" id="rememberme" class="abb">
+                            <label for="rememberme" class="control-label mr-2 d-flex" id="new">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded-pill mb-3" id="thispw">Login</button>
+                    </form>
+                    <div class="text-center mt-2 mb-3">
+                        <a  class=" forgotPwd text-decoration-none" data-target="#forgotPassword"
+                           data-toggle="modal" data-dismiss="modal">Forgot Password?</a>
+                    </div>
+                    <div class="text-center mt-3">
+                        Don't have account? <span>
+                            <a asp-controller="home" asp-action="NewCustomerAccount">Create an account? </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="forgotPassword" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="fg">Forgot password </h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span id="new" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-controller="Account" asp-action="ForgotPasswordResetlink">
+                        <div id="not" class="mb-5">
+                            @Html.TextBox("Email", "", new { @class = "form-control form-control-lg" })
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded-pill mb-3" id="thispw">Send</button>
+                    </form>
+
+                    <div>
+                        <a href="#myModal" data-toggle="modal" data-dismiss="modal" data-target="#myModal" class="d-flex justify-content-center mb-3">Login now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+</main>
+    </div>
+
+    <!--#region Footer-->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-2 footer-widget">
+                        <a href="#" title="Helper Hand">
+                            <img src="~/Images/white-logo-transparent-background-copy-4.png" alt="Helper Hand" class="a">
+                        </a>
+                    </div>
+                    <div class="col-lg-8 footer-widget">
+                        <ul class="footer-navigation d-flex justify-content-center">
+                            <li>
+                                <a asp-action="index" asp-controller="home">Home</a>
+                            </li>
+                            <li>
+                                <a asp-action="About" asp-controller="home">About</a>
+                            </li>
+                            <li>
+                                <a href="#" title="Testimonials">Testimonials</a>
+                            </li>
+                            <li>
+                                <a asp-action="Faq" asp-controller="home">FAQs</a>
+                            </li>
+                            <li>
+                                <a href="#" title="Insurance Policy">Insurance Policy</a>
+                            </li>
+                            <li>
+                                <a href="#" title="Impressum">Impressum</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 footer-widget">
+                        <ul class="social-media-list d-flex justify-content-end">
+                            <li>
+                                <a href="#" target="_blank" title="Facebook">
+                                    <img src="~/Images/fb.png" alt="Facebook">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank" title="Instagram">
+                                    <img src="~/Images/inst.png" alt="Instagram">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <hr class="text-light">
+                    <div class="custom-footer-text text-center ">
+                        ©2018 Helperland. All rights reserved. Terms and Conditions | Privacy Policy
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--#endregion Footer-->
+    <!--#region Javascript-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="~/jquery-validate/jquery.validate.js"></script>
+    <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+    <!--#endregion Javascript-->
+
+</body>
+</html>

@@ -1,0 +1,374 @@
+﻿@{
+    ViewData["Title"] = "Customer Dashboard";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+@using Microsoft.AspNetCore.Http;
+@model IEnumerable<Helperland.Models.ViewModel.CustomerServiceHistoryViewModel>
+<!--#region Service History Table-->
+
+<span class="d-none" id="customerEmail" value="@Context.Session.GetString("useremail")"> </span>
+<div class="col-lg-8 col-md-12 col-sm-12">
+
+    <div class="custom-upcoming-service-right-side table-responsive">
+        <table class="table border" id="tblCustomerModalServiceHistory">
+            <thead class="table-light borderless">
+                <tr>
+                    <th>&nbsp;&nbsp;&nbsp;Service ID <img src="~/Images/up-down-arrows.png" alt=""></th>
+                    <th>
+                        <span>
+                            Service date <img src="~/Images/up-down-arrows.png" alt=""
+                                              class="updown-arrows-dashboard">
+                        </span>
+                    </th>
+                    <th>
+                        Service Provider <img src="~/Images/up-down-arrows.png" alt=""
+                                              class="updown-arrows-dashboard">
+                    </th>
+                    <th>
+                        &nbsp;&nbsp;Payment <img src="~/Images/up-down-arrows.png" alt=""
+                                                 class="updown-arrows-dashboard">
+                    </th>
+                    <th>&nbsp;&nbsp;&nbsp;Action</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyCustomerModalServiceHistory">
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td onclick="OpenModal(@item.ServiceRequestId)"   data-bs-toggle="modal" data-bs-target="#ModalServiceHistory" class="custom-pointer pt-3 ps-4">@item.ServiceRequestId </td>
+                        <td onclick="OpenModal(@item.ServiceRequestId)" data-bs-toggle="modal" data-bs-target="#ModalServiceHistory" class="custom-pointer">
+                            <img src="~/Images/calendar2.png" alt=""> @item.ServiceStartDate <br> <img src="~/Images/layer-712.png"
+                                                                                                       alt=""> 12:00 - 18:00
+                        </td>
+                        <td class="custom-break-text">
+                            @if (item.ServiceProviderName != null)
+                            {
+                                <div class="row mt-1 justify-content-start">
+                                    <div class="col-4 custom-border-cap">
+                                        <img src="~/Images/cap.png" alt="" class="">
+                                    </div>
+                                    <div class="col-8 text-start">
+                                        @item.ServiceProviderName
+                                        <div class="">
+                                            <img src="~/Images/yellow-small-star.png" alt="">
+                                            <img src="~/Images/yellow-small-star.png" alt="">
+                                            <img src="~/Images/yellow-small-star.png" alt="">
+                                            <img src="~/Images/yellow-small-star.png" alt="">
+                                            <img src="~/Images/grey-small-star.png" alt="">
+                                            <span class="dashboard-number-text">4</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </td>
+                        <td class="text-center pt-3 pe-5 custom-total-cost fw-bold"> @item.TotalCost €</td>
+                        <td>
+                            <button id="btnReschedule" onclick="RescheduleService(@item.ServiceRequestId)" data-bs-toggle="modal" data-bs-target="#ModalServiceReschedule" class="btn  rounded-pill custom-reschedule-btnn text-white me-1">Reschedule</button>
+                            <button id="btnCancelService" onclick="CancelService(@item.ServiceRequestId)" data-bs-toggle="modal" data-bs-target="#ModalCancelService" class="custom-cancel-btn">Cancel</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--#endregion Service History Table-->
+<!--#region Modal - Service History -->
+<div class="modal fade" id="ModalServiceHistory" tabindex="-1" aria-labelledby="ModalServiceHistoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title custom-text-dim-gray" id="staticBackdropLabel">Service Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="refreshPage()"></button>
+            </div>
+            <div class="modal-body text-start">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div><h4 id="ModalServiceDateTime"></h4> <br />Duration : <span id="ModalServiceTotalHours"></span> Hrs<hr /></div>
+                        <div>
+                            Service Id: <span id="ModalServiceID"></span><br />
+                            Extras: <span id="ModalExtraService"></span><br />
+                            Net Amount: <span class="custom-text-color-green" id="ModalNetAmount"></span>€ <br />
+                            <hr />
+                        </div>
+                        <div>
+                            Address: <span id="ModalServiceAddress"></span><br />
+                            Billing Address: <span id="ModalServiceBillingAddress"></span><br />
+                            Phone: <span class="custom-text-color-green" id="ModalServiceMobile"></span><br />
+                            Email: <span class="custom-text-color-green" id="ModalServiceEmail"></span><br />
+                            <hr />
+                        </div>
+                        <div>
+                            Comments: <span id="ModalServiceComments"></span> <br />
+                        </div>
+                        <div>
+                            <span id="ModalHasPets"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-none" id="ModelServiceProviderDetails">
+                        <h6> Service Provider Details</h6>
+                        <div class="d-flex">
+                            <div class="service-history-icon d-flex"><img src="./img/cap.png"></div>
+                            <div>
+                                <span class="d-block" id="ModelServiceProviderName">  </span>
+                                <span id="ModelServiceRating"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-start">
+                <button type="button" id="btnModalReschedule" data-bs-toggle="modal" data-bs-target="#ModalServiceReschedule" onclick="RescheduleService(this.value)" class="btn btn-primary custom-reschedule-btnn text-white me-1">Reschedule</button>
+                <button type="button" @*id="btnModalCancelService" data-bs-toggle="modal" data-bs-target="#ModalCancelService"*@ class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" style="background-color: #FF6B6B !important" onclick="refreshPage()">Close</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--#endregion Modal - Service History -->
+<!--#region Modal - Reschedule -->
+<div class="modal fade" id="ModalServiceReschedule" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reschedule Service</h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" onclick="refreshPage()" class="btn-close"></button>
+                <span class="d-none" id="RecheduleServiceModelServiceId"></span>
+            </div>
+            <div class="modal-body">
+                <div class="alert  alert-dismissible fade show d-none " id="ModelAlertMessage" role="alert">
+                    <script src="https://cdn.lordicon.com/lusqsztk.js"></script>
+                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json"
+                               trigger="loop"
+                               delay="3000"
+                               style="width:50px;height:50px">
+                    </lord-icon>
+                </div>
+                <span> Select New Date &  Time</span><br />
+                <div class="row mt-2">
+                    <div class="col-md-8"> <input type="date" id="RescheduleModelDate" class="form-control" name="servicedate" /> </div>
+                    <div class="col-md-4">
+                        <select class="form-control form-select">
+                            <option value="8.00">8.00</option>
+                            <option value="8.30">8.30</option>
+                            <option value="9.00">9.00</option>
+                            <option value="9.30">9.30</option>
+                            <option value="10.00">10.0</option>
+                            <option value="10.30">10.30</option>
+                            <option value="11.00">11.0</option>
+                            <option value="11.30">11.30</option>
+                            <option value="12.00">12.0</option>
+                            <option value="12.30">12.30</option>
+                            <option value="13.00">13.00</option>
+                            <option value="13.30">13.30</option>
+                            <option value="14.00">14.00</option>
+                            <option value="14.30">14.30</option>
+                            <option value="15.00">15.00</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-2 p-2">
+                    <button class="btn btn-primary custom-active-dark-green rounded-pill font-white" onclick="UpdateServiceDate()">Update</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--#endregion Modal - Reschedule -->
+<!--#region Modal - Cancel Service -->
+
+<div class="modal fade" id="ModalCancelService" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="refreshPage()"></button>
+            </div>
+            <div class="modal-body">
+                @*<div class="alert  alert-dismissible fade show d-none " id="ModalCancelAlertMessage" role="alert">
+
+                </div>*@
+                <span> Why you want to cancel the service request ?</span><br />
+                <input type="hidden" value="" id="CancelModalServiceId" />
+
+                <div class="row mt-2">
+                    <div class="col-md-12"> <textarea rows="3" class="form-control" id="CancelServiceModalComments"> </textarea> </div>
+                    <span class="d-none text-danger" id="errCancelServiceModalComments"> Enter Reason  </span>
+                </div>
+                <div class=" mt-2 p-2">
+                    <button class="btn rounded-pill custom-bg-green-btn text-white form-control" id="btnCancelServiceModal" onclick="CancelServiceClick()">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--#endregion Modal - Cancel Service -->
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementsByName("servicedate")[0].setAttribute('min', today);
+
+</script>
+
+<script>
+    /* Page Refresh */
+    function refreshPage() {
+        location.reload();
+    }
+    /* Open Modal */
+    function OpenModal(id) {
+        $("#ModalServiceHistory").modal('show');
+        $("#btnModalReschedule").val(id);
+        $("#btnModalCancelService").val(id);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetServiceRequestData","Customer")',
+            data: { "ServiceRequestId": id },
+            success: function (response) {
+                console.log(response);
+                var obj = JSON.parse(response);
+                console.log(obj.TotalCost)
+                $("#ModalServiceDateTime").text(obj.ServiceDate);
+                $("#ModalServiceTotalHours").text(obj.TotalHour);
+                $("#ModalServiceID").text(id);
+                $("#ModalNetAmount").text(obj.TotalCost);
+                $("#ModalServiceAddress").text(obj.Address);
+                $("#ModalExtraService").text(obj.Extra);
+                $("#ModalServiceMobile").text(obj.MobileNumber);
+                $("#ModalServiceEmail").text(obj.Email);
+                $("#ModalServiceComments").text(obj.Comments);
+                
+                if (obj.hasPets) {
+                    $("#ModalHasPets").text("✔ I have pets");
+                }
+                else {
+                    $("#ModalHasPets").text("✘ I don't have pets");
+                }
+            },
+            failure: function (response) {
+                alert("failure because of " + response);
+            },
+            error: function (response) {
+                alert("Something went Wrong because of aya5 " + response);
+            }
+        });
+        $("#ModalServiceHistory").modal('show');
+    }
+        /*#region - Button Onclick Reschedule */
+        function RescheduleService(serviceId) {
+            $("#ModalServiceHistory").modal("hide");
+            $("#ModalServiceReschedule").modal("show");
+            $("#RecheduleServiceModelServiceId").val(serviceId);
+             @*$.ajax({
+                  type: "POST",
+                 url: "@Url.Action("GetServiceDate","Customer")",
+                 data: { "strServiceRequestId": serviceId },
+                 success: function (response) {
+                     $("#RescheduleModelDate").val(response);
+                    },
+                 failure: function (response) {
+                     alert("Not Done because of " + response);
+                    },
+                 error: function (response) {
+                     alert("Something went Wrong because of aaya4" + response);
+                    }
+              });*@
+        }
+        /*  Update Service Model */
+        function UpdateServiceDate() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UpdateServiceDate")",
+                data: { "serviceDate": $("#RescheduleModelDate").val(), "serviceId": $("#RecheduleServiceModelServiceId").val() },
+                success: function (response) {
+                    if (response) {
+                        $("#ModelAlertMessage").addClass("alert-success");
+                        $("#ModelAlertMessage").show();
+                        $("#ModelAlertMessage").text(" Reschedule Date Successfully").delay(5000);
+                        location.reload();
+                    }
+                    else {
+                        $("#ModelAlertMessage").addClass("alert-danger");
+                        $("#ModelAlertMessage").show();
+                        $("#ModelAlertMessage").text("Select different date ").fadeOut(8000);
+                    }
+                    },
+                failure: function (response) {
+                        alert("failure because of " + response);
+                    },
+                error: function (response) {
+                        alert("Something went Wrong because of aaya1 " + response);
+                    }
+              });
+    }
+        /*   Open Cancel  Model on Click of  Cancel Button Click*/
+        function CancelService(serviceId) {
+            $("#ModalCancelService").modal('show');
+            $("#CancelModalServiceId").val(serviceId);
+
+        }
+        /* Enable Update Button when user fill comment section */
+        $("#CancelServiceModalComments").change(function () {
+            var commentModal = $("#CancelServiceModalComments").val();
+            if (commentModal == null || commentModal == "") {
+                $("#errCancelServiceModalComments").show();
+                $("#btnCancelServiceModal").attr('disabled', 'disabled');
+            }
+            else {
+                $("#errCancelServiceModalComments").hide();
+                $("#btnCancelServiceModal").removeAttr("disabled");
+            }
+        });
+        /* Cancel Service */
+    function CancelServiceClick(serviceId) {
+            if ($("#CancelServiceModalComments").val() == null) {
+                $("#errCancelServiceModalComments").show();
+                $("#btnCancelServiceModal").removeAttr("disabled");
+                return;
+            }
+            $.ajax({
+
+                type: "POST",
+                url: "@Url.Action("CancelService","Customer")",
+                data: { "serviceId": $("#CancelModalServiceId").val(), "message": $("#CancelServiceModalComments").val() },
+                success: function (responce) {
+                    if (responce) {
+                        $("#ModelCancelAlertMessage").addClass("alert-success");
+                        $("#ModelCancelAlertMessage").show();
+                        $("#ModelCancelAlertMessage").text(" Canceled Your Request").fadeOut(5000);
+                        location.reload();
+                    }
+                    else {
+                        $("#ModelAlertMessage").addClass("alert-danger");
+                        $("#ModelAlertMessage").show();
+                        $("#ModelAlertMessage").text("Somthing went wrong aaya3").fadeOut(8000);
+                        location.reload();
+                    }
+                    },
+                failure: function (response) {
+                    alert("failure because of " + response);
+                    },
+                error: function (response) {
+                    alert("Something went Wrong because of aaya" + response);
+                    }
+              });
+        }
+    $(document).ready(function () {
+        $.noConflict();
+        $('#tblCustomerModalServiceHistory').dataTable({
+            "bFilter": false,
+            "bInfo": true,
+            'aoColumnDefs': [{ 'bSortable': false, 'aTargets': [-1] }],
+
+        });
+    });
+</script>
