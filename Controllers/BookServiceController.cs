@@ -247,26 +247,26 @@ namespace Helperland.Controllers
                 users = _context.Users.Where(x => x.ZipCode == bookServiceViewModel.ZipCode && x.UserTypeId == 1).ToList();
             }
 
-            foreach (var item in users)
-            {
-                string welcomeMessage = "Welcome to Helperland,   <br/> You get new Service request. <br/> <b> Check it now <b>";
+            //foreach (var item in users)
+            //{
+            //    string welcomeMessage = "Welcome to Helperland,   <br/> You get new Service request. <br/> <b> Check it now <b>";
 
-                String To = item.Email;
-                String subject = "New Service Request";
-                String Body = "You got new Service request " + " : " + welcomeMessage;
-                MailMessage obj = new MailMessage();
-                obj.To.Add(To);
-                obj.Subject = subject;
-                obj.Body = Body;
-                obj.From = new MailAddress("dummy");
-                obj.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-                smtp.Port = 587;
-                smtp.UseDefaultCredentials = true;
-                smtp.EnableSsl = true;
-                smtp.Credentials = new System.Net.NetworkCredential("--", "--");
-                smtp.Send(obj);
-            }
+            //    String To = item.Email;
+            //    String subject = "New Service Request";
+            //    String Body = "You got new Service request " + " : " + welcomeMessage;
+            //    MailMessage obj = new MailMessage();
+            //    obj.To.Add(To);
+            //    obj.Subject = subject;
+            //    obj.Body = Body;
+            //    obj.From = new MailAddress("dummy");
+            //    obj.IsBodyHtml = true;
+            //    SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+            //    smtp.Port = 587;
+            //    smtp.UseDefaultCredentials = true;
+            //    smtp.EnableSsl = true;
+            //    smtp.Credentials = new System.Net.NetworkCredential("--", "--");
+            //    smtp.Send(obj);
+            //}
             return serviceRequest.ServiceRequestId;    
         }
         [HttpPost]
