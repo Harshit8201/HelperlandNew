@@ -534,22 +534,22 @@
                          $("#ModelMainDiv").removeClass("col-md-12");
                          $("#ModelServiceAvatarImage").empty();
                          if (obj.Avatar == 0) {
-                             $("#ModelServiceAvatarImage").append(' <img src="./image/avatar-car.png" style="height:50px;width:50px;">  ');
+                             $("#ModelServiceAvatarImage").append(' <img src="~/Images/avatar-car.png" style="height:50px;width:50px;">  ');
                          }
                          else if (obj.Avatar == 1) {
-                             $("#ModelServiceAvatarImage").append('  <img src="./image/avatar-female.png" v> ');
+                             $("#ModelServiceAvatarImage").append('  <img src="~/Images/avatar-female.png" v> ');
                          }
                          else if (obj.Avatar == 2) {
-                             $("#ModelServiceAvatarImage").append(' <img src="./image/avatar-hat.png" style="height:50px;width:50px;"> ');
+                             $("#ModelServiceAvatarImage").append(' <img src="~/Images/avatar-hat.png" style="height:50px;width:50px;"> ');
                          }
                          else if (obj.Avatar == 3) {
-                             $("#ModelServiceAvatarImage").append('  <img src="./image/avatar-iron.png" style="height:50px;width:50px;"> ');
+                             $("#ModelServiceAvatarImage").append('  <img src="~/Images/avatar-iron.png" style="height:50px;width:50px;"> ');
                          }
                          else if (obj.Avatar == 4) {
-                             $("#ModelServiceAvatarImage").append('  <img src="./image/avatar-male.png" style="height:50px;width:50px;">');
+                             $("#ModelServiceAvatarImage").append('  <img src="~/Images/avatar-male.png" style="height:50px;width:50px;">');
                          }
                          else if (obj.Avatar == 5) {
-                             $("#ModelServiceAvatarImage").append(' <img src="./image/avatar-ship.png" style="height:50px;width:50px;"> ');
+                             $("#ModelServiceAvatarImage").append(' <img src="~/Images/avatar-ship.png" style="height:50px;width:50px;"> ');
                          }
                      }
                      else {
@@ -559,10 +559,10 @@
                          $("#ModelMainDiv").addClass("col-md-12");
                      }
                      if (obj.Haspet) {
-                         $("#ModelHasPatImage").attr("src", "~/Images/included.png");
+                         $("#ModelHasPat").text(" ✔ I have pets at Home");
                          $("#ModelHasPat").hide();
                      } else {
-                         $("#ModelHasPatImage").attr("src", "~/Images/not-included.png");
+                         $("#ModelHasPat").text(" ✘ I don't have pets at Home");
                          $("#ModelHasPat").show();
                      }
                      $("#ModelServiceRating").empty();

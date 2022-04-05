@@ -171,12 +171,11 @@
                      $("#ModelCustomerName").text(obj.CustomerName);
                      $("#ModelComments").text(obj.Comments);
                      if (obj.Haspet) {
-                        /* $("#ModelHasPatImage").attr("src", "/Images/included.png");*/
+                        
                          $("#ModelHasPat").text(" ✔ I have pets at Home");
                      } else {
-                         /*$("#ModelHasPatImage").attr("src", "/Images/not-included.png");*/
-                         $("#ModelHasPat").text(" ✘ I don't have pets at Home")
-                     }
+                         
+                         $("#ModelHasPat").text(" ✘ I don't have pets at Home");
                  },
                  failure: function (response) {
                         alert("failure");
